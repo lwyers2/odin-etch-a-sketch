@@ -1,264 +1,220 @@
+let grid = document.querySelector('.grid');
 
+let gridSize = 16;
 
+createGrid(gridSize);
 
+let submit = document.querySelector('#submit');
 
+let currentSize = document.querySelector('#current-size');
 
+currentSize.textContent = `Current Grid Size: ${gridSize}x${gridSize}`;
 
+submit.addEventListener("click", (e) => {
+    e.preventDefault();
+    console.log("Submitted");
 
-makeGrid(16);
+    gridSize = document.querySelector('#size').value;
 
-
-let reset = document.querySelector(".reset");
-
-
-
-
-
-function makeGrid(number) {
-
-    for (let i = 1; i < (number + 1); i++) {
-
-        let divC = document.createElement("div");
-        divC.className = "col";
-        // let divCText = document.createTextNode(`Column${i}`);
-        // divC.appendChild(divCText);
-        let cont = document.querySelector(".container");
-        cont.appendChild(divC);
-
-        // Nested for loop
-        for (let j = 1; j < (number + 1); j++) {
-            let divR = document.createElement("div");
-            divR.className = "row";
-            // let divRText = document.createTextNode(`Row${j}`);
-            // divR.appendChild(divRText);
-
-            divC.appendChild(divR);
-
-
-
-
-        }
-
-
+    if (gridSize > 100 || gridSize <= 0) {
+        alert("Grid size not in range 1-100, default being set(16x16)");
+        gridSize = 16;
     }
+
+
+    createGrid(gridSize);
+    currentSize.textContent = `Current Grid Size: ${gridSize}x${gridSize}`;
+});
+
+
+
+
+
+
+
+
+
+
+function createGrid(size) {
+    grid.innerHTML = "";
+
+    for (let i = 0; i < size; i++) {
+        let row = document.createElement("div");
+        row.className = "row";
+        for (let i = 0; i < size; i++) {
+            let col = document.createElement("div");
+            col.id = "box";
+            row.appendChild(col);
+            grid.appendChild(row);
+        }
+        grid.appendChild(row);
+    }
+
 }
 
-function removeGrid() {
-    let grid = document.querySelector(".container");
+let black = document.querySelector('#black');
+let erase = document.querySelector('#erase');
+let random = document.querySelector('#random');
+let brighten = document.querySelector('#brighten');
+let darken = document.querySelector('#darken');
 
-    while (grid.firstChild) {
-        grid.removeChild(grid.lastChild);
-    }
 
-}
-
-//buttons
-
-blackBtn = document.querySelector(".blackout");
-blackBtn.addEventListener("click", () => {
-
-    let gridBoxes = document.querySelectorAll(".row");
-
-    for (let i = 0; i < gridBoxes.length; i++) {
-        let box = gridBoxes[i];
-        box.addEventListener("mouseover", () => {
-            gridBoxes[i].style.backgroundColor = "black";
-
-        });
-
-    }
-
-});
-
-randomColor = document.querySelector(".random-color");
-randomColor.addEventListener("click", () => {
-
-    let gridBoxes = document.querySelectorAll(".row");
-
-    for (let i = 0; i < gridBoxes.length; i++) {
-        let box = gridBoxes[i];
-        box.addEventListener("mouseover", () => {
-            gridBoxes[i].style.backgroundColor = (randomRGB());
-        });
-
-    }
-
-});
-
-let darken = document.querySelector(".darken");
-darken.addEventListener("click", () => {
-
-    let gridBoxes = document.querySelectorAll(".row");
-
-    for (let i = 0; i < gridBoxes.length; i++) {
-        let box = gridBoxes[i];
-        if ((gridBoxes[i].style.backgroundColor) !== "" || (gridBoxes[i].style.backgroundColor) == "black") {
-
-            let color = getDarkerLighter(gridBoxes[i].style.backgroundColor, "dark");
+let box = document.querySelectorAll('#box');
 
 
 
 
-            box.addEventListener("mouseover", () => {
-
-                gridBoxes[i].style.backgroundColor = getDarkerLighter(color, "dark");
-
-            });
-
-        } else {
-
-            box.addEventListener("mouseover", () => {
-
-                gridBoxes[i].style.backgroundColor = "";
-
-            });
-
-
-        }
-    }
-
-});
-
-let lighten = document.querySelector(".brighten");
-lighten.addEventListener("click", () => {
-
-    let gridBoxes = document.querySelectorAll(".row");
-
-    for (let i = 0; i < gridBoxes.length; i++) {
-        let box = gridBoxes[i];
-        if ((gridBoxes[i].style.backgroundColor) !== "") {
-
-            let color = getDarkerLighter(gridBoxes[i].style.backgroundColor, "light");
 
 
 
 
-            box.addEventListener("mouseover", () => {
-
-                gridBoxes[i].style.backgroundColor = getDarkerLighter(color, "light");
-
-            });
-
-        } else {
-
-            box.addEventListener("mouseover", () => {
-
-                gridBoxes[i].style.backgroundColor = "";
-
-            });
 
 
-            gridBoxes[i].className = "row";
+
+let color = "";
+
+
+for (let i = 0; i < box.length; i++) {
+
+    box[i].addEventListener("mouseover", () => {
+
+        let currentColor = box[i].style.backgroundColor;
+
+
+
+        if (color == "black") {
+            box[i].style.backgroundColor = "rgb(0,0,0)";
+        } else if (color == "erase") {
+            box[i].style.backgroundColor = "rgb(256,256,256)";
+        } else if (color == "random") {
+            box[i].style.backgroundColor = `rgb(${getRandom()},${getRandom()},${getRandom()})`;
+        } else if (color == "brighten") {
+            box[i].style.backgroundColor = getDarkerLighter(currentColor, "light");
+        } else if (color == "darken") {
+            box[i].style.backgroundColor = getDarkerLighter(currentColor, "dark");
         }
 
 
-    }
-
-});
-
-let erase = document.querySelector(".erase");
-erase.addEventListener("click", () => {
-
-    let gridBoxes = document.querySelectorAll(".row");
-
-    for (let i = 0; i < gridBoxes.length; i++) {
-        let box = gridBoxes[i];
-        box.addEventListener("mouseover", () => {
-            gridBoxes[i].style.backgroundColor = "";
-        });
-
-    }
-
-});
+        function getDarkerLighter(string, darkOrLight) {
 
 
 
 
+            let rgb1, rgb2, rgb3;
+
+            if (darkOrLight === "dark") {
+
+
+                rgb1 = (parseInt(getRGBValue(string, 0))) - 10;
+                rgb2 = (parseInt(getRGBValue(string, 1))) - 10;
+                rgb3 = (parseInt(getRGBValue(string, 2))) - 10;
 
 
 
-function getDarkerLighter(string, darkOrLight) {
+                if (rgb1 < 0) {
+                    rgb1 = 0;
+                }
+                if (rgb2 < 0) {
+                    rgb2 = 0;
+                }
+                if (rgb3 < 0) {
+                    rgb3 = 0;
+                }
+
+            } else {
+
+                if (darkOrLight === "light") {
+
+                    rgb1 = (parseInt(getRGBValue(string, 0))) + 10;
+                    rgb2 = (parseInt(getRGBValue(string, 1))) + 10;
+                    rgb3 = (parseInt(getRGBValue(string, 2))) + 10;
 
 
 
+                    if (rgb1 >= 255) {
+                        rgb1 = 255;
+                    }
+                    if (rgb2 >= 255) {
+                        rgb2 = 255;
+                    }
+                    if (rgb3 >= 255) {
+                        rgb3 = 255;
+                    }
 
-    let rgb1, rgb2, rgb3;
-
-    if (darkOrLight === "dark") {
-
-
-        rgb1 = (parseInt(getRGBValue(string, 0))) - 10;
-        rgb2 = (parseInt(getRGBValue(string, 1))) - 10;
-        rgb3 = (parseInt(getRGBValue(string, 2))) - 10;
-
-
-
-        if (rgb1 < 0) {
-            rgb1 = 0;
-        }
-        if (rgb2 < 0) {
-            rgb2 = 0;
-        }
-        if (rgb3 < 0) {
-            rgb3 = 0;
-        }
-
-    } else {
-
-        if (darkOrLight === "light") {
-
-            rgb1 = (parseInt(getRGBValue(string, 0))) + 10;
-            rgb2 = (parseInt(getRGBValue(string, 1))) + 10;
-            rgb3 = (parseInt(getRGBValue(string, 2))) + 10;
-
-
-
-            if (rgb1 >= 255) {
-                rgb1 = 255;
-            }
-            if (rgb2 >= 255) {
-                rgb2 = 255;
-            }
-            if (rgb3 >= 255) {
-                rgb3 = 255;
+                }
             }
 
+            return `rgb(${rgb1},${rgb2},${rgb3})`;
         }
-    }
 
-    return `rgb(${rgb1},${rgb2},${rgb3})`;
-}
+        function getRGBValue(rgbValue, position) {
 
-function getRGBValue(rgbValue, position) {
+            for (let i = 0; i < 4; i++) {
+                rgbValue = rgbValue.removeCharAt(1);
+            }
 
-    for (let i = 0; i < 4; i++) {
-        rgbValue = rgbValue.removeCharAt(1);
-    }
-
-    rgbValue = rgbValue.removeCharAt(rgbValue.length);
-    let colorArray = rgbValue.split(",");
+            rgbValue = rgbValue.removeCharAt(rgbValue.length);
+            let colorArray = rgbValue.split(",");
 
 
-    if (colorArray[position].charAt(0) === '0') {
-        colorArray[position].removeCharAt(1);
-        return colorArray[position];
-    } else
+            if (colorArray[position].charAt(0) === '0') {
+                colorArray[position].removeCharAt(1);
+                return colorArray[position];
+            } else
 
 
-        return colorArray[position];
-}
+                return colorArray[position];
+        }
+    });
 
-String.prototype.removeCharAt = function (i) {
-    var tmp = this.split(''); // convert to an array
-    tmp.splice(i - 1, 1); // remove 1 element from the array (adjusting for non-zero-indexed counts)
-    return tmp.join(''); // reconstruct the string
 }
 
 
-function randomRGB() {
 
-    return `rgb(${getRandomInt(0, 255)},${getRandomInt(0, 255)},${getRandomInt(0, 255)})`
-};
+
+black.addEventListener("click", (e) => {
+
+
+    color = "black";
+
+
+
+});
+
+erase.addEventListener("click", (e) => {
+
+    color = "erase";
+});
+
+random.addEventListener("click", (e) => {
+
+
+
+    color = "random"
+
+});
+
+brighten.addEventListener("click", (e) => {
+
+    color = "brighten";
+});
+
+darken.addEventListener("click", (e) => {
+
+    color = "darken";
+});
+
+
+
+
+
+
+
+// get random between 00 and 256
+function getRandom() {
+    return getRandomInt(0, 256);
+}
+
 
 /**
  * Returns a random integer between min (inclusive) and max (inclusive).
@@ -273,26 +229,28 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-reset.addEventListener("click", () => {
 
 
-    removeGrid();
+// let css = '';
+// let head = document.head;
+// let style = document.createElement('style');
+
+// head.appendChild(style);
 
 
+// if (style.styleSheet) {
+//     // This is required for IE8 and below.
+//     style.styleSheet.cssText = css;
+// } else {
+//     style.appendChild(document.createTextNode(css));
+// }
 
+String.prototype.removeCharAt = function (i) {
+    var tmp = this.split(''); // convert to an array
+    tmp.splice(i - 1, 1); // remove 1 element from the array (adjusting for non-zero-indexed counts)
+    return tmp.join(''); // reconstruct the string
+}
 
-    let number = parseInt(prompt("Enter number between 0-100. If invalid default set at 16x16", 16));
-    if (number > 0 && number <= 100) {
-
-
-        makeGrid(number);
-    } else {
-        alert(`Invalid choice of number passed("${number}" ), making grid 16x16`);
-        makeGrid(16);
-    }
-
-
-});
 
 
 

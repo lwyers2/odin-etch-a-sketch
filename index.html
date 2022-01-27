@@ -9,37 +9,46 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
 <body>
 
 
-    <div class="content">
-
+    <div class="container">
         <header>
-            Etech a sketch
+            <h1>Etch a Sketch</h1>
         </header>
-
-        <div class="toy">
-
-            <button class="reset" type="button">Reset</button>
-
-            <div class="container">
-
+        <div class="grid">
+        </div>
+        <div class="panel">
+            <div class="buttons">
+                <button id="black">Black</button>
+                <button id="erase">Erase</button>
+                <button id="random">Random</button>
+                <button id="brighten">Brighten</button>
+                <button id="darken">Darken</button>
             </div>
-
-            <div>
-                <h2>Settings</h2>
-                <button class="random-color" type="button">Random Color</button>
-                <button class="blackout" type="button">Black</button>
-                <button class="brighten" type="button">Brighten</button>
-                <button class="darken" type="button">Darken</button>
-                <button class="erase" type="button">Erase</button>
-
+            <div class="change-size">
+                <label for="size">Maximimum Grid Size: 100x100</label>
+                <input type="text" id="size" name="size" placeholder="16">
+                <input type="submit" value="submit" id="submit">
+                <p id="current-size"></p>
             </div>
         </div>
-
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js">
+    </script>
+
 </body>
 
 </html>
