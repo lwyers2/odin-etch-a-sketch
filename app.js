@@ -50,7 +50,143 @@ function createGrid(size) {
         grid.appendChild(row);
     }
 
+    let black = document.querySelector('#black');
+    let erase = document.querySelector('#erase');
+    let random = document.querySelector('#random');
+    let brighten = document.querySelector('#brighten');
+    let darken = document.querySelector('#darken');
+    let box = document.querySelectorAll('#box');
+    let color = "";
+
+    for (let i = 0; i < box.length; i++) {
+
+        box[i].addEventListener("mouseover", () => {
+
+            let currentColor = box[i].style.backgroundColor;
+
+
+
+            if (color == "black") {
+                box[i].style.backgroundColor = "rgb(0,0,0)";
+            } else if (color == "erase") {
+                box[i].style.backgroundColor = "rgb(256,256,256)";
+            } else if (color == "random") {
+                box[i].style.backgroundColor = `rgb(${getRandom()},${getRandom()},${getRandom()})`;
+            } else if (color == "brighten") {
+                box[i].style.backgroundColor = getDarkerLighter(currentColor, "light");
+            } else if (color == "darken") {
+                box[i].style.backgroundColor = getDarkerLighter(currentColor, "dark");
+            }
+
+
+            function getDarkerLighter(string, darkOrLight) {
+
+
+
+
+                let rgb1, rgb2, rgb3;
+
+                if (darkOrLight === "dark") {
+
+
+                    rgb1 = (parseInt(getRGBValue(string, 0))) - 10;
+                    rgb2 = (parseInt(getRGBValue(string, 1))) - 10;
+                    rgb3 = (parseInt(getRGBValue(string, 2))) - 10;
+
+
+
+                    if (rgb1 < 0) {
+                        rgb1 = 0;
+                    }
+                    if (rgb2 < 0) {
+                        rgb2 = 0;
+                    }
+                    if (rgb3 < 0) {
+                        rgb3 = 0;
+                    }
+
+                } else {
+
+                    if (darkOrLight === "light") {
+
+                        rgb1 = (parseInt(getRGBValue(string, 0))) + 10;
+                        rgb2 = (parseInt(getRGBValue(string, 1))) + 10;
+                        rgb3 = (parseInt(getRGBValue(string, 2))) + 10;
+
+
+
+                        if (rgb1 >= 255) {
+                            rgb1 = 255;
+                        }
+                        if (rgb2 >= 255) {
+                            rgb2 = 255;
+                        }
+                        if (rgb3 >= 255) {
+                            rgb3 = 255;
+                        }
+
+                    }
+                }
+
+                return `rgb(${rgb1},${rgb2},${rgb3})`;
+            }
+
+            function getRGBValue(rgbValue, position) {
+
+                for (let i = 0; i < 4; i++) {
+                    rgbValue = rgbValue.removeCharAt(1);
+                }
+
+                rgbValue = rgbValue.removeCharAt(rgbValue.length);
+                let colorArray = rgbValue.split(",");
+
+
+                if (colorArray[position].charAt(0) === '0') {
+                    colorArray[position].removeCharAt(1);
+                    return colorArray[position];
+                } else
+
+
+                    return colorArray[position];
+            }
+        });
+
+    }
+
+    black.addEventListener("click", (e) => {
+
+
+        color = "black";
+
+
+
+    });
+
+    erase.addEventListener("click", (e) => {
+
+        color = "erase";
+    });
+
+    random.addEventListener("click", (e) => {
+
+
+
+        color = "random"
+
+    });
+
+    brighten.addEventListener("click", (e) => {
+
+        color = "brighten";
+    });
+
+    darken.addEventListener("click", (e) => {
+
+        color = "darken";
+    });
+
 }
+
 
 let black = document.querySelector('#black');
 let erase = document.querySelector('#erase');
@@ -74,135 +210,10 @@ let box = document.querySelectorAll('#box');
 let color = "";
 
 
-for (let i = 0; i < box.length; i++) {
-
-    box[i].addEventListener("mouseover", () => {
-
-        let currentColor = box[i].style.backgroundColor;
-
-
-
-        if (color == "black") {
-            box[i].style.backgroundColor = "rgb(0,0,0)";
-        } else if (color == "erase") {
-            box[i].style.backgroundColor = "rgb(256,256,256)";
-        } else if (color == "random") {
-            box[i].style.backgroundColor = `rgb(${getRandom()},${getRandom()},${getRandom()})`;
-        } else if (color == "brighten") {
-            box[i].style.backgroundColor = getDarkerLighter(currentColor, "light");
-        } else if (color == "darken") {
-            box[i].style.backgroundColor = getDarkerLighter(currentColor, "dark");
-        }
-
-
-        function getDarkerLighter(string, darkOrLight) {
 
 
 
 
-            let rgb1, rgb2, rgb3;
-
-            if (darkOrLight === "dark") {
-
-
-                rgb1 = (parseInt(getRGBValue(string, 0))) - 10;
-                rgb2 = (parseInt(getRGBValue(string, 1))) - 10;
-                rgb3 = (parseInt(getRGBValue(string, 2))) - 10;
-
-
-
-                if (rgb1 < 0) {
-                    rgb1 = 0;
-                }
-                if (rgb2 < 0) {
-                    rgb2 = 0;
-                }
-                if (rgb3 < 0) {
-                    rgb3 = 0;
-                }
-
-            } else {
-
-                if (darkOrLight === "light") {
-
-                    rgb1 = (parseInt(getRGBValue(string, 0))) + 10;
-                    rgb2 = (parseInt(getRGBValue(string, 1))) + 10;
-                    rgb3 = (parseInt(getRGBValue(string, 2))) + 10;
-
-
-
-                    if (rgb1 >= 255) {
-                        rgb1 = 255;
-                    }
-                    if (rgb2 >= 255) {
-                        rgb2 = 255;
-                    }
-                    if (rgb3 >= 255) {
-                        rgb3 = 255;
-                    }
-
-                }
-            }
-
-            return `rgb(${rgb1},${rgb2},${rgb3})`;
-        }
-
-        function getRGBValue(rgbValue, position) {
-
-            for (let i = 0; i < 4; i++) {
-                rgbValue = rgbValue.removeCharAt(1);
-            }
-
-            rgbValue = rgbValue.removeCharAt(rgbValue.length);
-            let colorArray = rgbValue.split(",");
-
-
-            if (colorArray[position].charAt(0) === '0') {
-                colorArray[position].removeCharAt(1);
-                return colorArray[position];
-            } else
-
-
-                return colorArray[position];
-        }
-    });
-
-}
-
-
-
-
-black.addEventListener("click", (e) => {
-
-
-    color = "black";
-
-
-
-});
-
-erase.addEventListener("click", (e) => {
-
-    color = "erase";
-});
-
-random.addEventListener("click", (e) => {
-
-
-
-    color = "random"
-
-});
-
-brighten.addEventListener("click", (e) => {
-
-    color = "brighten";
-});
-
-darken.addEventListener("click", (e) => {
-
-    color = "darken";
-});
 
 
 
